@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏠 Wally - Real Estate Monitor</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-home"></i> Wally Real Estate Monitor</h1>
+                <div class="header-stats">
+                    <span class="stat-item" id="total-properties">
+                        <i class="fas fa-building"></i>
+                        <span id="property-count">0</span> Properties
+                    </span>
+                    <span class="stat-item" id="new-today">
+                        <i class="fas fa-plus-circle"></i>
+                        <span id="new-count">0</span> New Today
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="properties">
+                <i class="fas fa-list"></i> All Properties
+            </button>
+            <button class="nav-tab" data-tab="new-listings">
+                <i class="fas fa-star"></i> New Listings
+            </button>
+            <button class="nav-tab" data-tab="favorites">
+                <i class="fas fa-heart"></i> Favorites
+            </button>
+            <button class="nav-tab" data-tab="activity">
+                <i class="fas fa-clock"></i> Activity
+            </button>
+            <button class="nav-tab" data-tab="stats">
+                <i class="fas fa-chart-bar"></i> Market Stats
+            </button>
+        </nav>
+
+        <!-- Filters -->
+        <div class="filters" id="property-filters">
+            <div class="filter-group">
+                <label for="zip-filter">ZIP Code:</label>
+                <select id="zip-filter" multiple>
+                    <option value="">All Areas</option>
+                    <option value="91913">91913 - Chula Vista East</option>
+                    <option value="91910">91910 - Chula Vista Central</option>
+                    <option value="91911">91911 - Chula Vista West</option>
+                    <option value="91915">91915 - Bonita</option>
+                    <option value="91917">91917 - National City</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="price-filter">Price Range:</label>
+                <select id="price-filter">
+                    <option value="">Any Price</option>
+                    <option value="0-800000">Under $800K</option>
+                    <option value="800000-1000000">$800K - $1M</option>
+                    <option value="1000000-1200000">$1M - $1.2M</option>
+                    <option value="1200000-9999999">Over $1.2M</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="source-filter">Source:</label>
+                <select id="source-filter">
+                    <option value="">All Sources</option>
+                    <option value="redfin">Redfin</option>
+                    <option value="zillow">Zillow</option>
+                    <option value="realtor">Realtor.com</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sort-filter">Sort By:</label>
+                <select id="sort-filter">
+                    <option value="updated">Recently Updated</option>
+                    <option value="newest">Newest First</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                </select>
+            </div>
+
+            <button id="apply-filters" class="btn btn-primary">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Loading indicator -->
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading...
+            </div>
+
+            <!-- Properties Tab -->
+            <div class="tab-content active" id="properties-tab">
+                <div class="properties-grid" id="properties-grid">
+                    <!-- Properties will be loaded here -->
+                </div>
+            </div>
+
+            <!-- New Listings Tab -->
+            <div class="tab-content" id="new-listings-tab">
+                <h2>New Listings (Last 48 Hours)</h2>
+                <div class="properties-grid" id="new-listings-grid">
+                    <!-- New listings will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div class="tab-content" id="favorites-tab">
+                <h2>Favorite Properties</h2>
+                <div class="properties-grid" id="favorites-grid">
+                    <!-- Favorites will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Activity Tab -->
+            <div class="tab-content" id="activity-tab">
+                <h2>Recent Activity</h2>
+                <div class="activity-feed" id="activity-feed">
+                    <!-- Activity items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div class="tab-content" id="stats-tab">
+                <h2>Market Statistics</h2>
+                <div class="stats-grid" id="stats-grid">
+                    <!-- Market stats will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Property Modal -->
+    <div class="modal" id="property-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <div id="modal-body">
+                <!-- Property details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Property Card Template -->
+    <template id="property-card-template">
+        <div class="property-card" data-property-id="">
+            <div class="property-image">
+                <div class="property-badge"></div>
+                <div class="property-favorite">
+                    <i class="far fa-heart"></i>
+                </div>
+            </div>
+            <div class="property-content">
+                <div class="property-price"></div>
+                <div class="property-address"></div>
+                <div class="property-details">
+                    <span class="detail-item">
+                        <i class="fas fa-bed"></i> <span class="bedrooms"></span> bd
+                    </span>
+                    <span class="detail-item">
+                        <i class="fas fa-bath"></i> <span class="bathrooms"></span> ba
+                    </span>
+                    <span class="detail-item">
+                        <i class="fas fa-ruler-combined"></i> <span class="square-feet"></span> sqft
+                    </span>
+                </div>
+                <div class="property-meta">
+                    <span class="source-badge"></span>
+                    <span class="listing-date"></span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Activity Item Template -->
+    <template id="activity-item-template">
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="activity-content">
+                <div class="activity-description"></div>
+                <div class="activity-property"></div>
+                <div class="activity-time"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Stat Card Template -->
+    <template id="stat-card-template">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-value"></div>
+                <div class="stat-label"></div>
+            </div>
+        </div>
+    </template>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

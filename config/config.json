@@ -1,0 +1,22 @@
+{
+  "bedrooms_min": 5,
+  "bathrooms_min": 3,
+  "price_max": 1200000,
+  "price_min": 500000,
+  "property_types": ["Single Family", "Townhouse", "Condo"],
+  "monitoring": {
+    "scan_frequency": "3x_daily",
+    "scan_times": ["07:00", "13:00", "19:00"],
+    "max_pages": 10,
+    "request_delay": 2
+  },
+  "dashboard": {
+    "port": 8080,
+    "auto_open": true
+  },
+  "alerts": {
+    "new_listings": true,
+    "price_changes": true,
+    "price_drop_threshold": 0.05
+  }
+}

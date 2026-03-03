@@ -1,0 +1,12 @@
+{
+  "primary": ["91913"],
+  "secondary": ["91910", "91911", "91915", "91917", "92154"],
+  "names": {
+    "91913": "Chula Vista East",
+    "91910": "Chula Vista Central", 
+    "91911": "Chula Vista West",
+    "91915": "Bonita",
+    "91917": "National City",
+    "92154": "San Ysidro"
+  }
+}
